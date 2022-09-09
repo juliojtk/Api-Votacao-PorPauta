@@ -9,14 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AssociadosDto {
-
-    private String nome;
-
-    private String cpf;
-
-    private String voto;
+public class ResultadoVotacaoDto {
 
     private Integer pautaId;
+    private String voto;
+    private Integer qtdVotos;
 
 }

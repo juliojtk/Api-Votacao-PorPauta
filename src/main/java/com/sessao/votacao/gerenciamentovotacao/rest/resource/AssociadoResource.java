@@ -1,11 +1,11 @@
 package com.sessao.votacao.gerenciamentovotacao.rest.resource;
 
 import com.sessao.votacao.gerenciamentovotacao.domain.dtos.AssociadosDto;
+import com.sessao.votacao.gerenciamentovotacao.domain.dtos.ResultadoVotacaoDto;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Associado;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.AssociadoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +24,11 @@ public class AssociadoResource {
     @ResponseStatus(OK)
     public List<Associado> buscarTodosAssociados(){
         return associadoService.listarTodosAssociados();
+    }
+
+    @GetMapping("/resultado-votacao/{pautaId}")
+    public List<ResultadoVotacaoDto> buscarResultadoVotacao(@PathVariable Integer pautaId){
+        return associadoService.listarResultadoVotacao(pautaId);
     }
 
     @GetMapping("/{id}")

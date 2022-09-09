@@ -1,9 +1,9 @@
 package com.sessao.votacao.gerenciamentovotacao.rest.service.impl;
 
 import com.sessao.votacao.gerenciamentovotacao.domain.dtos.AssociadosDto;
+import com.sessao.votacao.gerenciamentovotacao.domain.dtos.ResultadoVotacaoDto;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Associado;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Pauta;
-import com.sessao.votacao.gerenciamentovotacao.domain.enums.Voto;
 import com.sessao.votacao.gerenciamentovotacao.domain.repositories.AssociadoRepository;
 import com.sessao.votacao.gerenciamentovotacao.domain.repositories.PautaRepository;
 import com.sessao.votacao.gerenciamentovotacao.rest.exceptions.GerenciamentoException;
@@ -34,6 +34,20 @@ public class AssociadoServiceImpl implements AssociadoService {
     public Associado ListarAssociadoId(Integer id) {
         Optional<Associado> associado = associadoRepository.findById(id);
         return associado.orElseThrow(() -> new RuntimeException("Associado não encontrado"));
+    }
+
+    @Override
+    public List<ResultadoVotacaoDto> listarResultadoVotacao(Integer pautaId) {
+        return associadoRepository.findResultadoVotos(pautaId)
+                .stream()
+                .map(e -> convertToObject(String.valueOf(e))).toList();
+
+    }
+
+    // Convertendo List<String> para List<ResultadoVotacaoDto>
+    public ResultadoVotacaoDto convertToObject(String element){
+        String[] strResult = element.split(",");
+        return new ResultadoVotacaoDto(Integer.parseInt(strResult[0]), strResult[1], Integer.parseInt(strResult[2]));
     }
 
     @Override
@@ -68,5 +82,6 @@ public class AssociadoServiceImpl implements AssociadoService {
     public void deletarAssociado(Integer id) {
         associadoRepository.deleteById(id);
     }
+
 
 }
