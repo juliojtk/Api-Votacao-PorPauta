@@ -17,6 +17,6 @@ public class AssociadosDto {
 
     private String cpf;
 
-    private List<PautaDto> pautas;
+//  private PautaDto pauta;
 
 }

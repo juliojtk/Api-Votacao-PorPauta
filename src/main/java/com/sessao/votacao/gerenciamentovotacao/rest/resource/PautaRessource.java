@@ -1,11 +1,12 @@
 package com.sessao.votacao.gerenciamentovotacao.rest.resource;
 
+import com.sessao.votacao.gerenciamentovotacao.domain.dtos.PautaDto;
+import com.sessao.votacao.gerenciamentovotacao.domain.entities.Pauta;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.PautaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,6 +19,12 @@ public class PautaRessource {
     @GetMapping("/listar")
     public String teste(){
         return "Ok pauta";
+    }
+
+    @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
+    public Pauta savePauta(@RequestBody PautaDto pautaDto){
+        return pautaService.persitirPauta(pautaDto);
     }
 
 }

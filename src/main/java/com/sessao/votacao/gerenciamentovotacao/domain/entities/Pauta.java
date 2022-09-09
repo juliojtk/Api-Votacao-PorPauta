@@ -29,7 +29,11 @@ public class Pauta {
     @Column(name = "votos")
     private Voto votos;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "pauta", fetch = FetchType.LAZY) // Uma Pauta para muitos Associados
-    private Set<Associado> associados;
+    private String resultado;
+
+    private Integer idAssociado;
+
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "pauta", fetch = FetchType.LAZY) // Uma Pauta para muitos Associados
+//    private Set<Associado> associados;
 }
