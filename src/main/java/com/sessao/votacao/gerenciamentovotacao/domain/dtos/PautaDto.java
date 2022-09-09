@@ -13,12 +13,13 @@ import java.util.Set;
 @Builder
 public class PautaDto {
 
-
     private String assunto;
 
     private String votos;
 
-    private Set<Integer> associadosId;
+    private String resultado;
+
+    private Integer associadoID;
 
 
 
