@@ -25,15 +25,9 @@ public class Pauta {
     @Column(name = "assunto", length = 200)
     private String assunto;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "votos")
-    private Voto votos;
-
     private String resultado;
 
-    private Integer idAssociado;
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "pauta", fetch = FetchType.LAZY) // Uma Pauta para muitos Associados
-//    private Set<Associado> associados;
+    @JsonIgnore
+    @OneToMany(mappedBy = "pautaId", fetch = FetchType.LAZY) // Uma Pauta para muitos Associados
+    private Set<Associado> associados;
 }

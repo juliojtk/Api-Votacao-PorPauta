@@ -15,8 +15,6 @@ public class PautaDto {
 
     private String assunto;
 
-    private String votos;
-
     private String resultado;
 
     private Integer associadoID;

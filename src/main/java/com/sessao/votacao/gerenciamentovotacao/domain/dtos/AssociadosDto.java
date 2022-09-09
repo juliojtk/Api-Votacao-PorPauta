@@ -17,6 +17,8 @@ public class AssociadosDto {
 
     private String cpf;
 
-//  private PautaDto pauta;
+    private String voto;
+
+    private Integer pautaId;
 
 }

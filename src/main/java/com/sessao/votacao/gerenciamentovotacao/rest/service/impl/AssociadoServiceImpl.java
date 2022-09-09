@@ -3,7 +3,10 @@ package com.sessao.votacao.gerenciamentovotacao.rest.service.impl;
 import com.sessao.votacao.gerenciamentovotacao.domain.dtos.AssociadosDto;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Associado;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Pauta;
+import com.sessao.votacao.gerenciamentovotacao.domain.enums.Voto;
 import com.sessao.votacao.gerenciamentovotacao.domain.repositories.AssociadoRepository;
+import com.sessao.votacao.gerenciamentovotacao.domain.repositories.PautaRepository;
+import com.sessao.votacao.gerenciamentovotacao.rest.exceptions.GerenciamentoException;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.AssociadoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class AssociadoServiceImpl implements AssociadoService {
     @Autowired
     private final AssociadoRepository associadoRepository;
 
+    @Autowired
+    private final PautaRepository pautaRepository;
+
     @Override
     public List<Associado> listarTodosAssociados() {
         return associadoRepository.findAll();
@@ -32,10 +38,16 @@ public class AssociadoServiceImpl implements AssociadoService {
 
     @Override
     public Associado persistirAssociado(AssociadosDto associadosDto) {
+        Integer idPauta = associadosDto.getPautaId();
+        Pauta p = pautaRepository
+                .findById(idPauta)
+                .orElseThrow(() -> new GerenciamentoException("Id da pauta não encontrado"));
 
         Associado associado = new Associado();
             associado.setNome(associadosDto.getNome());
             associado.setCpf(associadosDto.getCpf());
+            associado.setVoto(associadosDto.getVoto());
+            associado.setPautaId(p);
 
         return associadoRepository.save(associado);
     }
@@ -46,6 +58,7 @@ public class AssociadoServiceImpl implements AssociadoService {
                 .findById(id)
                 .map(associadoExiste -> {
                     associado.setId(associadoExiste.getId());
+                    associado.setPautaId(associadoExiste.getPautaId());
                     associadoRepository.save(associado);
                     return associado;
                 });

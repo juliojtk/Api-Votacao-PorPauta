@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/pauta")
@@ -16,14 +18,14 @@ public class PautaRessource {
     @Autowired
     private final PautaService pautaService;
 
-    @GetMapping("/listar")
-    public String teste(){
-        return "Ok pauta";
+    @GetMapping()
+    public List<Pauta> buscarTodasPautas(){
+        return pautaService.listarTodasPautas();
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Pauta savePauta(@RequestBody PautaDto pautaDto){
+    public Pauta salvarPauta(@RequestBody PautaDto pautaDto){
         return pautaService.persitirPauta(pautaDto);
     }
 
