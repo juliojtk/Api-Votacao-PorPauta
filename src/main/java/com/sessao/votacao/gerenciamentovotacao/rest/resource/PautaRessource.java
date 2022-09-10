@@ -5,8 +5,12 @@ import com.sessao.votacao.gerenciamentovotacao.domain.entities.Pauta;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.PautaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,14 +20,21 @@ public class PautaRessource {
     @Autowired
     private final PautaService pautaService;
 
-    @GetMapping("/listar")
-    public String teste(){
-        return "Ok pauta";
+    @GetMapping()
+    @ResponseStatus(OK)
+    public List<Pauta> buscarTodasPautas(){
+        return pautaService.listarTodasPautas();
+    }
+
+    @GetMapping("/visualizar-votacao/{idPauta}")
+    @ResponseStatus(OK)
+    public Pauta visualizarResultadoVotacao(@PathVariable Integer idPauta){
+        return pautaService.buscarResultPauta(idPauta);
     }
 
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
-    public Pauta savePauta(@RequestBody PautaDto pautaDto){
+    @ResponseStatus(CREATED)
+    public Pauta salvarPauta(@RequestBody PautaDto pautaDto){
         return pautaService.persitirPauta(pautaDto);
     }
 

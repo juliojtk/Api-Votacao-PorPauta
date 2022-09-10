@@ -5,7 +5,6 @@ import com.sessao.votacao.gerenciamentovotacao.domain.entities.Associado;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.AssociadoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +25,12 @@ public class AssociadoResource {
         return associadoService.listarTodosAssociados();
     }
 
+    @PostMapping("/gerar-resultado-votacao/{pautaId}")
+    @ResponseStatus(CREATED)
+    public void gerarResultadoVotacao(@PathVariable Integer pautaId){
+        associadoService.persistirResultadoVotacao(pautaId);
+    }
+
     @GetMapping("/{id}")
     @ResponseStatus(OK)
     public Associado buscarAssociadoPorId(@PathVariable Integer id){
@@ -34,8 +39,8 @@ public class AssociadoResource {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Associado salvarAssociado(@RequestBody AssociadosDto associadosDto){
-        return associadoService.persistirAssociado(associadosDto);
+    public void salvarAssociado(@RequestBody AssociadosDto associadosDto){
+        associadoService.persistirAssociadoEVotar(associadosDto);
     }
 
     @PutMapping("/{id}")

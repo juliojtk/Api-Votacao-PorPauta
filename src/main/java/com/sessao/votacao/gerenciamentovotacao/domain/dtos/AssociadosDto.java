@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +15,8 @@ public class AssociadosDto {
 
     private String cpf;
 
-//  private PautaDto pauta;
+    private String voto;
+
+    private Integer pautaId;
 
 }

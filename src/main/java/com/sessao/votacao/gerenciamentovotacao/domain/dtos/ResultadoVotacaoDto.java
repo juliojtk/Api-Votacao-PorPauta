@@ -9,8 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PautaDto {
+public class ResultadoVotacaoDto {
 
-    private String assunto;
+    private Integer pautaId;
+    private String voto;
+    private Integer qtdVotos;
 
 }

@@ -26,9 +26,11 @@ public class Associado{
     @Column(name = "cpf", length = 11)
     private String cpf;
 
-//    @ManyToOne // Muitos Associados para uma Pauta
-//    @JoinColumn(name = "pauta_id")
-//    private Pauta pauta;
+    @Column(name = "voto", length = 3)
+    private String voto;
+    @ManyToOne // Muitas Associados para uma Pauta
+    @JoinColumn(name = "pauta_id")
+    private Pauta pautaId;
 
 
 
