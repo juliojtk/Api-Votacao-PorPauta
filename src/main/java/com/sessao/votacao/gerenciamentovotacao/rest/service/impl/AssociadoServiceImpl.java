@@ -38,14 +38,40 @@ public class AssociadoServiceImpl implements AssociadoService {
 
     @Override
     public List<ResultadoVotacaoDto> listarResultadoVotacao(Integer pautaId) {
-        return associadoRepository.findResultadoVotos(pautaId)
+        List<ResultadoVotacaoDto> listResultadoVotacaoDto = associadoRepository.findResultadoVotos(pautaId)
                 .stream()
                 .map(e -> convertToObject(String.valueOf(e))).toList();
 
+                Integer maiorSim = 0;
+                Integer maiorNao = 0;
+
+                if (!listResultadoVotacaoDto.isEmpty()){
+                    for (ResultadoVotacaoDto r : listResultadoVotacaoDto){
+                        if (r.getVoto().equals("Sim")){
+                            maiorSim += r.getQtdVotos();
+                        }else if (r.getVoto().equals("Nao")){
+                            maiorNao += r.getQtdVotos();
+                        }
+                        if (maiorSim > maiorNao){
+                            Integer idPauta = r.getPautaId();
+                            Pauta pauta = pautaRepository.findById(idPauta)
+                                    .orElseThrow(() -> new GerenciamentoException("Id da Pauta não encontrado"));
+                            pauta.setResultado("Mais votos Sim, quantidade: " + maiorSim);
+                            pautaRepository.save(pauta);
+                        }else {
+                            Integer idPauta = r.getPautaId();
+                            Pauta pauta = pautaRepository.findById(idPauta)
+                                    .orElseThrow(() -> new GerenciamentoException("Id da Pauta não encontrado"));
+                            pauta.setResultado("Mais votos Nao, quantidade: " + maiorNao);
+                            pautaRepository.save(pauta);
+                        }
+                    }
+        } return listResultadoVotacaoDto;
+
     }
 
-    // Convertendo List<String> para List<ResultadoVotacaoDto>
-    public ResultadoVotacaoDto convertToObject(String element){
+
+    public ResultadoVotacaoDto convertToObject(String element){ // Convertendo List<String> para List<ResultadoVotacaoDto>
         String[] strResult = element.split(",");
         return new ResultadoVotacaoDto(Integer.parseInt(strResult[0]), strResult[1], Integer.parseInt(strResult[2]));
     }
