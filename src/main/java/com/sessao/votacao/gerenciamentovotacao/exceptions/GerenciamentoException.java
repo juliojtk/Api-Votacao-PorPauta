@@ -1,4 +1,4 @@
-package com.sessao.votacao.gerenciamentovotacao.rest.exceptions;
+package com.sessao.votacao.gerenciamentovotacao.exceptions;
 
 public class GerenciamentoException extends RuntimeException{
     public GerenciamentoException(String message){

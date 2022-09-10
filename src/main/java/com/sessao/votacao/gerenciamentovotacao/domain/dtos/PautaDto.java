@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,11 +12,5 @@ import java.util.Set;
 public class PautaDto {
 
     private String assunto;
-
-    private String resultado;
-
-    private Integer associadoID;
-
-
 
 }

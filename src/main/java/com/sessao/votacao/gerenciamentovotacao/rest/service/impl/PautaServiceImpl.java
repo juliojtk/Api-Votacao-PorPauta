@@ -4,6 +4,7 @@ import com.sessao.votacao.gerenciamentovotacao.domain.dtos.PautaDto;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Pauta;
 import com.sessao.votacao.gerenciamentovotacao.domain.repositories.AssociadoRepository;
 import com.sessao.votacao.gerenciamentovotacao.domain.repositories.PautaRepository;
+import com.sessao.votacao.gerenciamentovotacao.exceptions.GerenciamentoException;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.PautaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,18 @@ public class PautaServiceImpl implements PautaService {
     }
 
     @Override
+    public Pauta buscarResultPauta(Integer idPauta) {
+        return pautaRepository.findById(idPauta)
+                .orElseThrow(() -> new GerenciamentoException("Id da pauta não encontrado!"));
+    }
+
+    @Override
     public Pauta persitirPauta(PautaDto pautaDto) {
         Pauta p = new Pauta();
         p.setAssunto(pautaDto.getAssunto());
-        p.setResultado(pautaDto.getResultado());
+        p.setResultado("N/D");
         return pautaRepository.save(p);
     }
+
 
 }

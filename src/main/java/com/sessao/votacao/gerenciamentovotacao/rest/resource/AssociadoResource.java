@@ -1,7 +1,6 @@
 package com.sessao.votacao.gerenciamentovotacao.rest.resource;
 
 import com.sessao.votacao.gerenciamentovotacao.domain.dtos.AssociadosDto;
-import com.sessao.votacao.gerenciamentovotacao.domain.dtos.ResultadoVotacaoDto;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Associado;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.AssociadoService;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,10 @@ public class AssociadoResource {
         return associadoService.listarTodosAssociados();
     }
 
-    @GetMapping("/resultado-votacao/{pautaId}")
-    public List<ResultadoVotacaoDto> buscarResultadoVotacao(@PathVariable Integer pautaId){
-        return associadoService.listarResultadoVotacao(pautaId);
+    @PostMapping("/gerar-resultado-votacao/{pautaId}")
+    @ResponseStatus(CREATED)
+    public void gerarResultadoVotacao(@PathVariable Integer pautaId){
+        associadoService.persistirResultadoVotacao(pautaId);
     }
 
     @GetMapping("/{id}")
@@ -39,8 +39,8 @@ public class AssociadoResource {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public Associado salvarAssociado(@RequestBody AssociadosDto associadosDto){
-        return associadoService.persistirAssociado(associadosDto);
+    public void salvarAssociado(@RequestBody AssociadosDto associadosDto){
+        associadoService.persistirAssociadoEVotar(associadosDto);
     }
 
     @PutMapping("/{id}")
