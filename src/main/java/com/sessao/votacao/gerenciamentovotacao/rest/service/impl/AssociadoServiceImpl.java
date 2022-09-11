@@ -52,7 +52,7 @@ public class AssociadoServiceImpl implements AssociadoService {
                 for (ResultadoVotacaoDto r : listResultadoVotacaoDto){
                     if (r.getVoto().equals("SIM")){
                         maiorSim += r.getQtdVotos();
-                    }else if (r.getVoto().equals("NAO")){
+                    }else if (r.getVoto().equals("NAO") || r.getVoto().equals("NÃO")){
                         maiorNao += r.getQtdVotos();
                     }
                     if (maiorSim > maiorNao){

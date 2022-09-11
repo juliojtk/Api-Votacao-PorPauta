@@ -23,7 +23,7 @@ public class Pauta {
     private Integer id;
 
     @Column(name = "assunto", length = 200)
-    @NotEmpty(message = "Campo assunto obrigatorio")
+    @NotEmpty(message = "Campo assunto obrigatório")
     private String assunto;
 
     private String resultado;
