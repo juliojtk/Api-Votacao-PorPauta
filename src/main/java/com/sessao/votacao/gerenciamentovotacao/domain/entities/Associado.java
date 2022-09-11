@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Data
 @AllArgsConstructor
@@ -21,16 +24,23 @@ public class Associado{
     private Integer id;
 
     @Column(name = "nome", length = 100)
+    @NotEmpty(message = "Campo nome não pode ser vazio")
     private String nome;
 
     @Column(name = "cpf", length = 11)
+    //@CPF(message = "Campo CPF invalido!")
+    @NotEmpty(message = "Campo CPF não pode ser vazio")
+    @NotNull
     private String cpf;
 
     @Column(name = "voto", length = 3)
+    @NotEmpty(message = "Campo voto não pode ser vazio")
+    @NotNull
+    @Pattern(regexp="^(sim|Sim|SIM|nao|Nao|NAO|não|Não|NÃO)$", message="É possivel inserir apenas Sim ou Nao")
     private String voto;
     @ManyToOne // Muitas Associados para uma Pauta
     @JoinColumn(name = "pauta_id")
-    private Pauta pautaId;
+    private Pauta pauta;
 
 
 
