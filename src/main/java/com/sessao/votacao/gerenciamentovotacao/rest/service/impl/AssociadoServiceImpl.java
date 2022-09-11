@@ -97,7 +97,7 @@ public class AssociadoServiceImpl implements AssociadoService {
             associado.setNome(associadosDto.getNome());
             associado.setCpf(associadosDto.getCpf());
             associado.setVoto(associadosDto.getVoto().toUpperCase());
-            associado.setPautaId(p);
+            associado.setPauta(p);
 
         associadoRepository.save(associado);
     }
@@ -108,7 +108,7 @@ public class AssociadoServiceImpl implements AssociadoService {
                 .findById(id)
                 .map(associadoExiste -> {
                     associado.setId(associadoExiste.getId());
-                    associado.setPautaId(associadoExiste.getPautaId());
+                    associado.setPauta(associadoExiste.getPauta());
                     associado.setVoto(associado.getVoto().toUpperCase());
                     associadoRepository.save(associado);
                     return associado;

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -34,7 +35,7 @@ public class PautaRessource {
 
     @PostMapping()
     @ResponseStatus(CREATED)
-    public Pauta salvarPauta(@RequestBody PautaDto pautaDto){
+    public Pauta salvarPauta(@Valid @RequestBody PautaDto pautaDto){
         return pautaService.persitirPauta(pautaDto);
     }
 

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -39,13 +40,13 @@ public class AssociadoResource {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public void salvarAssociado(@RequestBody AssociadosDto associadosDto){
+    public void salvarAssociado(@Valid @RequestBody AssociadosDto associadosDto){
         associadoService.persistirAssociadoEVotar(associadosDto);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void alterarAssociado(@PathVariable Integer id, @RequestBody Associado associado){
+    public void alterarAssociado(@Valid @PathVariable Integer id, @RequestBody Associado associado){
         associadoService.atualizarAssociado(id, associado);
     }
 

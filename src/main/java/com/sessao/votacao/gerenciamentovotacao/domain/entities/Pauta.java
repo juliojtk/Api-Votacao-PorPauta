@@ -7,13 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
+@Table(name = "pauta")
 public class Pauta {
 
     @Id
@@ -21,11 +23,12 @@ public class Pauta {
     private Integer id;
 
     @Column(name = "assunto", length = 200)
+    @NotEmpty(message = "Campo assunto obrigatorio")
     private String assunto;
 
     private String resultado;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pautaId", fetch = FetchType.LAZY) // Uma Pauta para muitos Associados
-    private Set<Associado> associados;
+    @OneToMany(mappedBy = "pauta", fetch = FetchType.LAZY) // Uma Pauta para muitos Associados
+    private List<Associado> associados;
 }
