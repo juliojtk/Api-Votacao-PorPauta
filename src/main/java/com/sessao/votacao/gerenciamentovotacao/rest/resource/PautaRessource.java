@@ -2,6 +2,7 @@ package com.sessao.votacao.gerenciamentovotacao.rest.resource;
 
 import com.sessao.votacao.gerenciamentovotacao.domain.dtos.PautaDto;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Pauta;
+import com.sessao.votacao.gerenciamentovotacao.exceptions.GerenciamentoException;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.PautaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +32,11 @@ public class PautaRessource {
     @ApiOperation("Buscar todas as Pautas")
     @ApiResponse(code = 200, message = "Pauta encontrado")
     public List<Pauta> buscarTodasPautas(){
-        return pautaService.listarTodasPautas();
+        try {
+            return pautaService.listarTodasPautas();
+        }catch (Exception e){
+            throw new GerenciamentoException(e.getMessage());
+        }
     }
 
     @GetMapping("/visualizar-votacao/{idPauta}")
@@ -42,7 +47,12 @@ public class PautaRessource {
             @ApiResponse(code = 404, message = "Pauta não encontrado para o ID informado.")
     })
     public Pauta visualizarResultadoVotacao(@PathVariable Integer idPauta){
-        return pautaService.buscarResultPauta(idPauta);
+        try {
+            return pautaService.buscarResultPauta(idPauta);
+        }catch (Exception e){
+            throw new GerenciamentoException(e.getMessage());
+        }
+
     }
 
     @PostMapping()
@@ -53,7 +63,11 @@ public class PautaRessource {
             @ApiResponse(code = 400, message = "Erro de validação.")
     })
     public Pauta salvarPauta(@Valid @RequestBody PautaDto pautaDto){
-        return pautaService.persitirPauta(pautaDto);
+        try {
+            return pautaService.persitirPauta(pautaDto);
+        }catch (GerenciamentoException e){
+            throw new GerenciamentoException(e.getMessage());
+        }
     }
 
 }

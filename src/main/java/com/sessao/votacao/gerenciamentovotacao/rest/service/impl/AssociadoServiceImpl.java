@@ -44,37 +44,32 @@ public class AssociadoServiceImpl implements AssociadoService {
             .stream()
             .map(e -> convertToObject(String.valueOf(e))).toList();
 
+        Pauta p = pautaRepository.findById(pautaId)
+                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
+
             Integer maiorSim = 0;
             Integer maiorNao = 0;
 
             if (!listResultadoVotacaoDto.isEmpty()){
 
                 for (ResultadoVotacaoDto r : listResultadoVotacaoDto){
+
                     if (r.getVoto().equals("SIM")){
                         maiorSim += r.getQtdVotos();
                     }else if (r.getVoto().equals("NAO") || r.getVoto().equals("NÃO")){
                         maiorNao += r.getQtdVotos();
                     }
                     if (maiorSim > maiorNao){
-                        Integer idPauta = r.getPautaId();
-                        Pauta pauta = pautaRepository.findById(idPauta)
-                                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
-                        pauta.setResultado("Mais votos Sim, quantidade: " + maiorSim + " de um total de: " + (maiorNao + maiorSim) + " votos!");
-                        pautaRepository.save(pauta);
+                        p.setResultado("Mais votos Sim, quantidade: " + maiorSim + " de um total de: " + (maiorNao + maiorSim) + " votos!");
+                        pautaRepository.save(p);
 
                     }else if (maiorNao > maiorSim){
-                        Integer idPauta = r.getPautaId();
-                        Pauta pauta = pautaRepository.findById(idPauta)
-                                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
-                        pauta.setResultado("Mais votos Nao, quantidade: " + maiorNao + " de um total de: " + (maiorNao + maiorSim) + " votos!");
-                        pautaRepository.save(pauta);
+                        p.setResultado("Mais votos Nao, quantidade: " + maiorNao + " de um total de: " + (maiorNao + maiorSim) + " votos!");
+                        pautaRepository.save(p);
 
                     }else {
-                        Integer idPauta = r.getPautaId();
-                        Pauta pauta = pautaRepository.findById(idPauta)
-                                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
-                        pauta.setResultado("Votos empatados, quantidade Sim: " + maiorSim + " Quantidade Não: " + maiorNao);
-                        pautaRepository.save(pauta);
+                        p.setResultado("Votos empatados, quantidade Sim: " + maiorSim + " Quantidade Não: " + maiorNao);
+                        pautaRepository.save(p);
                     }
                 }
         }
@@ -93,13 +88,17 @@ public class AssociadoServiceImpl implements AssociadoService {
                 .findById(idPauta)
                 .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
 
-        Associado associado = new Associado();
+        if (associadoRepository.findByCpf(associadosDto.getCpf()).isPresent()){
+            throw new GerenciamentoException("O Cpf informado já se encontra na base de dados!");
+        }else {
+            Associado associado = new Associado();
             associado.setNome(associadosDto.getNome());
             associado.setCpf(associadosDto.getCpf());
             associado.setVoto(associadosDto.getVoto().toUpperCase());
             associado.setPauta(p);
 
-        associadoRepository.save(associado);
+            associadoRepository.save(associado);
+        }
     }
 
     @Override

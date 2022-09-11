@@ -2,6 +2,7 @@ package com.sessao.votacao.gerenciamentovotacao.rest.resource;
 
 import com.sessao.votacao.gerenciamentovotacao.domain.dtos.AssociadosDto;
 import com.sessao.votacao.gerenciamentovotacao.domain.entities.Associado;
+import com.sessao.votacao.gerenciamentovotacao.exceptions.GerenciamentoException;
 import com.sessao.votacao.gerenciamentovotacao.rest.service.AssociadoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +31,11 @@ public class AssociadoResource {
     @ApiOperation("Buscar todos os Associados")
     @ApiResponse(code = 200, message = "Associados encontrados")
     public List<Associado> buscarTodosAssociados(){
-        return associadoService.listarTodosAssociados();
+        try {
+            return associadoService.listarTodosAssociados();
+        }catch (Exception e){
+            throw  new GerenciamentoException(e.getMessage());
+        }
     }
 
     @PostMapping("/gerar-resultado-votacao/{pautaId}")
@@ -41,7 +46,11 @@ public class AssociadoResource {
             @ApiResponse(code = 400, message = "Erro de validação.")
     })
     public void gerarResultadoVotacao(@PathVariable Integer pautaId){
-        associadoService.persistirResultadoVotacao(pautaId);
+        try {
+            associadoService.persistirResultadoVotacao(pautaId);
+        }catch (Exception e){
+            throw new GerenciamentoException(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
@@ -52,10 +61,14 @@ public class AssociadoResource {
             @ApiResponse(code = 404, message = "Associado não encontrado para o ID informado.")
     })
     public Associado buscarAssociadoPorId(@PathVariable Integer id){
-        return associadoService.ListarAssociadoId(id);
+        try {
+            return associadoService.ListarAssociadoId(id);
+        }catch (Exception e){
+            throw new GerenciamentoException(e.getMessage());
+        }
     }
 
-    @PostMapping
+    @PostMapping("/voto")
     @ResponseStatus(CREATED)
     @ApiOperation("Salva um Associado com seu Voto")
     @ApiResponses({
@@ -63,7 +76,11 @@ public class AssociadoResource {
             @ApiResponse(code = 400, message = "Erro de validação.")
     })
     public void salvarAssociadoEVoto(@Valid @RequestBody AssociadosDto associadosDto){
-        associadoService.persistirAssociadoEVotar(associadosDto);
+        try {
+            associadoService.persistirAssociadoEVotar(associadosDto);
+        }catch (GerenciamentoException e){
+            throw new GerenciamentoException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -74,7 +91,11 @@ public class AssociadoResource {
             @ApiResponse(code = 400, message = "Associado não encontrado para o ID informado.")
     })
     public void alterarAssociado(@Valid @PathVariable Integer id, @RequestBody Associado associado){
-        associadoService.atualizarAssociado(id, associado);
+        try {
+            associadoService.atualizarAssociado(id, associado);
+        }catch (GerenciamentoException e){
+            throw new GerenciamentoException(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -85,6 +106,10 @@ public class AssociadoResource {
             @ApiResponse(code = 404, message = "Associado não encontrado para o ID informado.")
     })
     public void removerAssociado(@PathVariable Integer id){
-        associadoService.deletarAssociado(id);
+        try {
+            associadoService.deletarAssociado(id);
+        }catch (Exception e){
+            throw new GerenciamentoException(e.getMessage());
+        }
     }
 }
