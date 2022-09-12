@@ -8,7 +8,7 @@ import java.util.List;
 public interface AssociadoService {
 
     List<Associado> listarTodosAssociados();
-    void persistirAssociadoEVotar(AssociadosDto associadosDto);
+    void persistirAssociadoEVotar(AssociadosDto associadosDto) throws Exception;
     Associado ListarAssociadoId(Integer id);
     void atualizarAssociado(Integer id, Associado associado);
     void deletarAssociado(Integer id);

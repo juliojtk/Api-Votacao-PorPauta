@@ -13,6 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
@@ -75,7 +82,7 @@ public class AssociadoResource {
             @ApiResponse(code = 201, message = "Associado e Voto salvo com sucesso!"),
             @ApiResponse(code = 400, message = "Erro de validação.")
     })
-    public void salvarAssociadoEVoto(@Valid @RequestBody AssociadosDto associadosDto){
+    public void salvarAssociadoEVoto(@Valid @RequestBody AssociadosDto associadosDto) throws Exception{
         try {
             associadoService.persistirAssociadoEVotar(associadosDto);
         }catch (GerenciamentoException e){

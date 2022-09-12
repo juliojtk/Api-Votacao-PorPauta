@@ -103,7 +103,7 @@ class AssociadoServiceImplTest {
 
     @Test
     @DisplayName("Salvar o associado com seu respectivo voto")
-    void persistirAssociadoEVotarReturnSucesso() {
+    void persistirAssociadoEVotarReturnSucesso() throws Exception {
         // ARRANGE
         AssociadosDto request = getBuildAssociadosDto();
         request.setCpf(null);

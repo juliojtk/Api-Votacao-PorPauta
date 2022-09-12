@@ -12,6 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,23 +85,31 @@ public class AssociadoServiceImpl implements AssociadoService {
     }
 
     @Override
-    public void persistirAssociadoEVotar(AssociadosDto associadosDto) {
+    public void persistirAssociadoEVotar(AssociadosDto associadosDto) throws Exception{
         Integer idPauta = associadosDto.getPautaId();
         Pauta p = pautaRepository
                 .findById(idPauta)
                 .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
 
-        if (associadoRepository.findByCpf(associadosDto.getCpf()).isPresent()){
-            throw new GerenciamentoException("O Cpf informado já se encontra na base de dados!");
-        }else {
-            Associado associado = new Associado();
-            associado.setNome(associadosDto.getNome());
-            associado.setCpf(associadosDto.getCpf());
-            associado.setVoto(associadosDto.getVoto().toUpperCase());
-            associado.setPauta(p);
+        URL url = new URL("https://user-info.herokuapp.com/users/" + associadosDto.getCpf() + "");
+        URLConnection connection = url.openConnection();
+        InputStream is = connection.getInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String retornoCpf = br.readLine();
 
-            associadoRepository.save(associado);
-        }
+//        if(retornoCpf.equals("{\"status\":\"ABLE_TO_VOTE\"}")){
+            if (associadoRepository.findByCpf(associadosDto.getCpf()).isPresent()){
+                throw new GerenciamentoException("O Cpf informado já se encontra na base de dados!");
+            }else {
+                Associado associado = new Associado();
+                associado.setNome(associadosDto.getNome());
+                associado.setCpf(associadosDto.getCpf());
+                associado.setVoto(associadosDto.getVoto().toUpperCase());
+                associado.setPauta(p);
+
+                associadoRepository.save(associado);
+            }
+//        } else throw new GerenciamentoException("UNABLE_TO_VOTE");
     }
 
     @Override
