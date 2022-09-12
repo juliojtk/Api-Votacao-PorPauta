@@ -74,7 +74,7 @@ public class AssociadoServiceImpl implements AssociadoService {
         }
     }
 
-    public ResultadoVotacaoDto convertToObject(String element){ // Convertendo List<String> para List<ResultadoVotacaoDto>
+    private ResultadoVotacaoDto convertToObject(String element){ // Convertendo List<String> para List<ResultadoVotacaoDto>
         String[] strResult = element.split(",");
         return new ResultadoVotacaoDto(Integer.parseInt(strResult[0]), strResult[1], Integer.parseInt(strResult[2]));
     }

@@ -37,7 +37,7 @@ public class Associado{
     @Column(name = "voto", length = 3)
     @NotEmpty(message = "Campo voto não pode ser vazio")
     @NotNull
-    @Pattern(regexp="^(sim|Sim|SIM|nao|Nao|NAO|não|Não|NÃO)$", message="É possivel inserir apenas Sim ou Não")
+    @Pattern(regexp="^(sim|Sim|SIM|nao|Nao|NAO|não|Não|NÃO)$", message="O voto deve ser Sim ou Não")
     private String voto;
     @ManyToOne // Muitas Associados para uma Pauta
     @JoinColumn(name = "pauta_id")
