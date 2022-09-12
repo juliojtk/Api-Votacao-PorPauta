@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AssociadoRepository extends JpaRepository<Associado, Integer> {
 
@@ -15,4 +16,7 @@ public interface AssociadoRepository extends JpaRepository<Associado, Integer> {
                     "WHERE a.pauta_id = :pautaId " +
                     "GROUP BY pauta_id, voto")
     List<String> findResultadoVotos(@Param("pautaId") Integer pautaId);
+
+    Optional<Associado> findByIdAndCpf(Integer id, String cpf);
+    Optional<String> findByCpf(String cpf);
 }

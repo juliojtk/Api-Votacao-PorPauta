@@ -12,6 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,81 +49,90 @@ public class AssociadoServiceImpl implements AssociadoService {
             .stream()
             .map(e -> convertToObject(String.valueOf(e))).toList();
 
+        Pauta p = pautaRepository.findById(pautaId)
+                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
+
             Integer maiorSim = 0;
             Integer maiorNao = 0;
 
             if (!listResultadoVotacaoDto.isEmpty()){
-
                 for (ResultadoVotacaoDto r : listResultadoVotacaoDto){
+
                     if (r.getVoto().equals("SIM")){
                         maiorSim += r.getQtdVotos();
                     }else if (r.getVoto().equals("NAO") || r.getVoto().equals("NÃO")){
                         maiorNao += r.getQtdVotos();
                     }
                     if (maiorSim > maiorNao){
-                        Integer idPauta = r.getPautaId();
-                        Pauta pauta = pautaRepository.findById(idPauta)
-                                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
-                        pauta.setResultado("Mais votos Sim, quantidade: " + maiorSim + " de um total de: " + (maiorNao + maiorSim) + " votos!");
-                        pautaRepository.save(pauta);
+                        p.setResultado("Mais votos Sim, quantidade: " + maiorSim + " de um total de: " + (maiorNao + maiorSim) + " votos!");
+                        pautaRepository.save(p);
 
                     }else if (maiorNao > maiorSim){
-                        Integer idPauta = r.getPautaId();
-                        Pauta pauta = pautaRepository.findById(idPauta)
-                                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
-                        pauta.setResultado("Mais votos Nao, quantidade: " + maiorNao + " de um total de: " + (maiorNao + maiorSim) + " votos!");
-                        pautaRepository.save(pauta);
+                        p.setResultado("Mais votos Nao, quantidade: " + maiorNao + " de um total de: " + (maiorNao + maiorSim) + " votos!");
+                        pautaRepository.save(p);
 
                     }else {
-                        Integer idPauta = r.getPautaId();
-                        Pauta pauta = pautaRepository.findById(idPauta)
-                                .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
-                        pauta.setResultado("Votos empatados, quantidade Sim: " + maiorSim + " Quantidade Não: " + maiorNao);
-                        pautaRepository.save(pauta);
+                        p.setResultado("Votos empatados, quantidade Sim: " + maiorSim + " Quantidade Não: " + maiorNao);
+                        pautaRepository.save(p);
                     }
-                }
+            }
         }
     }
 
-
-    public ResultadoVotacaoDto convertToObject(String element){ // Convertendo List<String> para List<ResultadoVotacaoDto>
+    private ResultadoVotacaoDto convertToObject(String element){ // Convertendo List<String> para List<ResultadoVotacaoDto>
         String[] strResult = element.split(",");
         return new ResultadoVotacaoDto(Integer.parseInt(strResult[0]), strResult[1], Integer.parseInt(strResult[2]));
     }
 
     @Override
-    public void persistirAssociadoEVotar(AssociadosDto associadosDto) {
+    public void persistirAssociadoEVotar(AssociadosDto associadosDto) throws Exception{
         Integer idPauta = associadosDto.getPautaId();
         Pauta p = pautaRepository
                 .findById(idPauta)
                 .orElseThrow(() -> new GerenciamentoException(PAUTA_NAO_ENCONTRADO));
 
-        Associado associado = new Associado();
-            associado.setNome(associadosDto.getNome());
-            associado.setCpf(associadosDto.getCpf());
-            associado.setVoto(associadosDto.getVoto().toUpperCase());
-            associado.setPauta(p);
+        URL url = new URL("https://user-info.herokuapp.com/users/" + associadosDto.getCpf() + "");
+        URLConnection connection = url.openConnection();
+        InputStream is = connection.getInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        String retornoCpf = br.readLine();
 
-        associadoRepository.save(associado);
+//        if(retornoCpf.equals("{\"status\":\"ABLE_TO_VOTE\"}")){
+            if (associadoRepository.findByCpf(associadosDto.getCpf()).isPresent()){
+                throw new GerenciamentoException("O Cpf informado já se encontra na base de dados!");
+            }else {
+                Associado associado = new Associado();
+                associado.setNome(associadosDto.getNome());
+                associado.setCpf(associadosDto.getCpf());
+                associado.setVoto(associadosDto.getVoto().toUpperCase());
+                associado.setPauta(p);
+
+                associadoRepository.save(associado);
+            }
+//        } else throw new GerenciamentoException("UNABLE_TO_VOTE");
     }
 
     @Override
     public void atualizarAssociado(Integer id, Associado associado) {
-        associadoRepository
-                .findById(id)
+        associadoRepository.findById(id)
+                .orElseThrow(() -> new GerenciamentoException("Id de associado não existe!"));
+
+            associadoRepository
+                .findByIdAndCpf(id, associado.getCpf())
                 .map(associadoExiste -> {
                     associado.setId(associadoExiste.getId());
                     associado.setPauta(associadoExiste.getPauta());
                     associado.setVoto(associado.getVoto().toUpperCase());
                     associadoRepository.save(associado);
                     return associado;
-                });
+                }).orElseThrow(() -> new GerenciamentoException("Cpf já existe na base de dados ou está invalido!"));
     }
 
     @Override
     public void deletarAssociado(Integer id) {
+        associadoRepository.findById(id)
+            .orElseThrow(() -> new GerenciamentoException("Id associado não encontrado!"));
         associadoRepository.deleteById(id);
     }
-
 
 }
