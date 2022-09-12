@@ -7,9 +7,8 @@ import java.util.List;
 
 public interface AssociadoService {
 
-
-    public List<Associado> listarTodosAssociados();
-    public void persistirAssociadoEVotar(AssociadosDto associadosDto);
+    List<Associado> listarTodosAssociados();
+    void persistirAssociadoEVotar(AssociadosDto associadosDto);
     Associado ListarAssociadoId(Integer id);
     void atualizarAssociado(Integer id, Associado associado);
     void deletarAssociado(Integer id);

@@ -51,7 +51,6 @@ public class AssociadoServiceImpl implements AssociadoService {
             Integer maiorNao = 0;
 
             if (!listResultadoVotacaoDto.isEmpty()){
-
                 for (ResultadoVotacaoDto r : listResultadoVotacaoDto){
 
                     if (r.getVoto().equals("SIM")){
@@ -71,10 +70,9 @@ public class AssociadoServiceImpl implements AssociadoService {
                         p.setResultado("Votos empatados, quantidade Sim: " + maiorSim + " Quantidade Não: " + maiorNao);
                         pautaRepository.save(p);
                     }
-                }
+            }
         }
     }
-
 
     public ResultadoVotacaoDto convertToObject(String element){ // Convertendo List<String> para List<ResultadoVotacaoDto>
         String[] strResult = element.split(",");
@@ -103,21 +101,25 @@ public class AssociadoServiceImpl implements AssociadoService {
 
     @Override
     public void atualizarAssociado(Integer id, Associado associado) {
-        associadoRepository
-                .findById(id)
+        associadoRepository.findById(id)
+                .orElseThrow(() -> new GerenciamentoException("Id de associado não existe!"));
+
+            associadoRepository
+                .findByIdAndCpf(id, associado.getCpf())
                 .map(associadoExiste -> {
                     associado.setId(associadoExiste.getId());
                     associado.setPauta(associadoExiste.getPauta());
                     associado.setVoto(associado.getVoto().toUpperCase());
                     associadoRepository.save(associado);
                     return associado;
-                });
+                }).orElseThrow(() -> new GerenciamentoException("Cpf já existe na base de dados ou está invalido!"));
     }
 
     @Override
     public void deletarAssociado(Integer id) {
+        associadoRepository.findById(id)
+            .orElseThrow(() -> new GerenciamentoException("Id associado não encontrado!"));
         associadoRepository.deleteById(id);
     }
-
 
 }

@@ -1,0 +1,17 @@
+CREATE DATABASE votacao;
+
+USE votacao;
+
+CREATE TABLE pauta (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    assunto VARCHAR(200) NOT NULL,
+    resultado VARCHAR(255)
+);
+
+CREATE TABLE associado (
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(11) NOT NULL UNIQUE,
+    voto VARCHAR(3) NOT NULL,
+    pauta_id INTEGER REFERENCES pauta (id)
+);

@@ -17,5 +17,6 @@ public interface AssociadoRepository extends JpaRepository<Associado, Integer> {
                     "GROUP BY pauta_id, voto")
     List<String> findResultadoVotos(@Param("pautaId") Integer pautaId);
 
+    Optional<Associado> findByIdAndCpf(Integer id, String cpf);
     Optional<String> findByCpf(String cpf);
 }

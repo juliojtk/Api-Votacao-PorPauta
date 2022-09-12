@@ -43,6 +43,4 @@ public class Associado{
     @JoinColumn(name = "pauta_id")
     private Pauta pauta;
 
-
-
 }
